@@ -1,6 +1,3 @@
-pub const STATUS_VEC: [&str; 4] = ["optimal","unrefined","sub-optimal","defective"];
-pub const PRIORITY_VEC: [&str; 4] = ["low","medium","high","critical"];
-
 use clap::{
     ArgGroup, Args, Parser, Subcommand, ValueEnum
 };
@@ -255,7 +252,7 @@ pub struct EditLog {
 
     /// the new status of the log.
     #[clap(short='s',long)]
-    pub new_status: Option<String>,
+    pub new_status: Option<i32>,
 
     /// the new name of the log.
     #[clap(short,long)]
@@ -272,19 +269,12 @@ pub struct ReportGlich {
     #[clap(short,long)]
     pub description: Option<String>,
 
-    /// the status of the component.
+    // TODO: turn this into a value enum
+    /// the status of the component: 1 for optimal, 2 for improvable, 3 for unadjusted, 4 for suboptimal, 5 for defective.
     #[clap(short,long,value_enum)]
-    pub status: Option<Status>,
+    pub status: Option<i32>,
 
     /// the name of the log that describes the glich.
     #[clap(short,long)]
     pub name: Option<String>,
-}
-
-#[derive(Debug,Clone, ValueEnum)]
-pub enum Status {
-    Optimal,
-    Unrefined,
-    SubOptimal,
-    Defective,
 }

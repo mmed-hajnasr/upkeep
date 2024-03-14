@@ -1,34 +1,69 @@
-IF (NOT EXISTS (SELECT *
-FROM INFORMATION_SCHEMA.TABLES
-WHERE TABLE_SCHEMA = 'dbo'
-    AND TABLE_NAME = 'Machine'))
-BEGIN
+CREATE TABLE IF NOT EXISTS Machine (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT
+);
+CREATE TABLE IF NOT EXISTS Component (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT,
+    priority INTEGER NOT NULL DEFAULT 3,
+    status INTEGER NOT NULL DEFAULT 1,
+    machineid INTEGER NOT NULL,
+    FOREIGN KEY (machineid) REFERENCES Machine(id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS Log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE,
+    description TEXT,
+    startDate datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status INTEGER NOT NULL DEFAULT 2,
+    fixed bit NOT NULL DEFAULT 0,
+    fixedDate datetime,
+    componentid INTEGER NOT NULL,
+    FOREIGN KEY (componentid) REFERENCES Component(id) ON DELETE CASCADE
+);
 
-    CREATE TABLE Machine
-    (
-        name nvarchar(50) NOT NULL PRIMARY KEY,
-        description nvarchar(100) NOT NULL,
-    );
-    CREATE TABLE Component
-    (
-        name nvarchar(50) PRIMARY KEY,
-        description nvarchar(100),
-        machineName nvarchar(50) NOT NULL,
-        priority int NOT NULL DEFAULT 3,
-        status int NOT NULL DEFAULT 1,
-        FOREIGN KEY (machineName) REFERENCES Machine(name) ON DELETE CASCADE
-    );
-    CREATE TABLE Log
-    (
-        id int NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR LogIdSeq,
-        name nvarchar(50) NOT NULL DEFAULT 'error n'+CONVERT(nvarchar(50),id),
-        description nvarchar(100),
-        component NVARCHAR(50) NOT NULL,
-        startDate datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        fixedDate datetime,
-        status int NOT NULL DEFAULT 1,
-        fixed bit NOT NULL DEFAULT 0,
-        FOREIGN KEY (component) REFERENCES Component(name) ON DELETE CASCADE
-    );
-    Create SEQUENCE LogIdSeq AS int START WITH 1 INCREMENT BY 1;
-END
+CREATE TRIGGER updateComponentStatusOnLogUpdate
+AFTER
+UPDATE ON Log BEGIN
+UPDATE Component
+SET status = (
+        SELECT max(status)
+        FROM Log
+        WHERE componentid = NEW.componentid
+    )
+WHERE id = NEW.componentid;
+END;
+
+CREATE TRIGGER updateComponentStatusOnLogInsert
+AFTER
+INSERT ON Log BEGIN
+UPDATE Component
+SET status = (
+        SELECT max(status)
+        FROM Log
+        WHERE componentid = NEW.componentid
+    )
+WHERE id = NEW.componentid;
+END;
+
+CREATE TRIGGER updateComponentStatusOnLogDelete
+AFTER
+DELETE ON Log BEGIN
+UPDATE Component
+SET status = (
+        SELECT max(status)
+        FROM Log
+        WHERE componentid = OLD.componentid
+    )
+WHERE id = OLD.componentid;
+END;
+
+CREATE TRIGGER updateLogNameIfNull
+AFTER
+INSERT ON Log BEGIN
+UPDATE Log
+SET name = "Error " || NEW.id
+WHERE id = NEW.id AND name IS NULL;
+END;
