@@ -1,6 +1,7 @@
 pub use rusqlite::{params, Connection, Result};
 pub use chrono::NaiveDate;
 pub mod tests;
+pub mod args;
 
 pub const STATUS_VEC: [&str; 5] = ["optimal","improvable","unadjusted","suboptimal","defective"];
 pub const PRIORITY_VEC: [&str; 4] = ["low","medium","high","critical"];
