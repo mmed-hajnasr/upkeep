@@ -3,5 +3,14 @@
         "./Cargo.toml",
         "./Cargo.toml"
     ],
-    "rust-analyzer.showUnlinkedFileNotification": false
+    "rust-analyzer.showUnlinkedFileNotification": false,
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "fsdaf",
+            "database": "${workspaceFolder:upkeep}/target/test.db"
+        }
+    ]
 }

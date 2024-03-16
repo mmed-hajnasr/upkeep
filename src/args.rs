@@ -1,10 +1,10 @@
 use clap::{
-    ArgGroup, Args, Parser, Subcommand, ValueEnum
+    ArgGroup, Args, Parser, Subcommand
 };
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about)]
-pub struct GlichLoggerArgs {
+pub struct UpkeepArgs {
     #[clap(subcommand)]
     pub action: Action,
 }
@@ -12,16 +12,16 @@ pub struct GlichLoggerArgs {
 #[derive(Debug, Subcommand)]
 pub enum Action {
     /// Mark a component or a log as fixed.
-    Fix(FixEntity),
+    // Fix(FixEntity),
 
     /// add a machine or a component.
     Add(AddEntity),
 
     /// remove a machine or a component or a log.
-    Remove(RemoveEntity),
+    // Remove(RemoveEntity),
 
     /// edit the attributes of a machine or a component or a log.
-    Edit(EditEntity),
+    // Edit(EditEntity),
 
     /// show all machines or components or logs.
     Show(ShowEntity),
@@ -29,8 +29,8 @@ pub enum Action {
     /// report a glich. 
     Report(ReportGlich),
 
-    /// open the dashboard.
-    Dashboard,
+    // open the dashboard.
+    // Dashboard,
 }
 
 //* the entity commands
@@ -85,13 +85,6 @@ pub struct ShowAll {
     #[clap(short,long)]
     pub machine: Option<String>,
 
-    /// sort the components by time.
-    #[clap(short,long, group = "sort")]
-    pub old: bool,
-
-    /// sort the components by priority.
-    #[clap(short,long, group = "sort")]
-    pub priority: bool,
 }
 
 #[derive(Debug, Args)]
@@ -100,13 +93,6 @@ pub struct ShowComponent {
     /// the name of the component whose logs will be shown.
     pub name: String,
 
-    /// sort the logs by time.
-    #[clap(short,long, group = "sort")]
-    pub old: bool,
-
-    /// sort the logs by priority.
-    #[clap(short,long, group = "sort")]
-    pub priority: bool,
 }
 
 //* the add commands
@@ -271,7 +257,7 @@ pub struct ReportGlich {
 
     // TODO: turn this into a value enum
     /// the status of the component: 1 for optimal, 2 for improvable, 3 for unadjusted, 4 for suboptimal, 5 for defective.
-    #[clap(short,long,value_enum)]
+    #[clap(short,long)]
     pub status: Option<i32>,
 
     /// the name of the log that describes the glich.
