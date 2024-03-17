@@ -1,5 +1,6 @@
 mod args;
 mod database_ops;
+mod lib;
 use std::path::Path;
 pub const STATUS_VEC: [&str; 5] = [
     "optimal",
@@ -19,7 +20,7 @@ fn main() {
 
     let command = args::UpkeepArgs::parse();
     match command.action {
-        args::Action::Add(component) => database_connection.handle_add(component.command),
+        args::Action::Add(info) => database_connection.handle_add(info.command),
         // args::Action::Fix(info) => todo!(),
         // args::Action::Remove(info) => todo!(),
         // args::Action::Edit(info) => todo!(),

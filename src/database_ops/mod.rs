@@ -2,6 +2,7 @@ use rusqlite::Connection;
 mod add_ops;
 mod show_ops;
 mod report_ops;
+mod output_ops;
 
 pub struct DatabaseOperations {
     conn: Connection,
