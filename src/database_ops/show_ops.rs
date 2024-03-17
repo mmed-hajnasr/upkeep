@@ -1,7 +1,7 @@
 use super::DatabaseOperations;
 use crate::args::{ShowAll, ShowComponent, ShowEntityCommand};
-use crate::STATUS_VEC;
 use rusqlite::{params, Error};
+use upkeep::STATUS_VEC;
 
 // TODO: implement the show operations
 impl DatabaseOperations {

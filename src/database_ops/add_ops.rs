@@ -3,7 +3,7 @@ use crate::args::{AddComponent, AddEntityCommand, AddMachine};
 use rusqlite::{params, Error};
 
 impl DatabaseOperations {
-    fn handle_add_machine(&self, info: AddMachine) {
+    pub fn handle_add_machine(&self, info: AddMachine) {
         // check if the machine name already exists
         const CHECK_MACHINE_NAME_QUERY: &str = "SELECT name FROM Machine WHERE name = ?1";
         match self
@@ -30,7 +30,7 @@ impl DatabaseOperations {
         }
     }
 
-    fn handle_add_component(&self, info: AddComponent) {
+    pub fn handle_add_component(&self, info: AddComponent) {
         // check if the component name already exists
         const CHECK_COMPONENT_NAME_QUERY: &str = "SELECT name FROM Component WHERE name = ?1";
         match self

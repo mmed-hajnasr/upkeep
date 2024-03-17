@@ -1,15 +1,7 @@
 mod args;
 mod database_ops;
-mod lib;
+mod tests;
 use std::path::Path;
-pub const STATUS_VEC: [&str; 5] = [
-    "optimal",
-    "improvable",
-    "unadjusted",
-    "suboptimal",
-    "defective",
-];
-pub const PRIORITY_VEC: [&str; 4] = ["low", "medium", "high", "critical"];
 
 use clap::Parser;
 
