@@ -1,6 +1,4 @@
-use clap::{
-    ArgGroup, Args, Parser, Subcommand
-};
+use clap::{ArgGroup, Args, Parser, Subcommand};
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about)]
@@ -23,12 +21,11 @@ pub enum Action {
     /// edit the attributes of a machine or a component or a log.
     Edit(EditEntity),
 
-    /// show all machines or components or logs.
+    /// show the current state of your machines and components.
     Show(ShowEntity),
 
-    /// report a glich. 
+    /// report a glich.
     Report(ReportGlich),
-
     // open the dashboard.
     // Dashboard,
 }
@@ -65,33 +62,34 @@ pub struct FixLog {
 //* the show commands
 #[derive(Debug, Args)]
 pub struct ShowEntity {
-    #[clap(subcommand)]
-    pub command: ShowEntityCommand,
-}
 
-#[derive(Debug, Subcommand)]
-pub enum ShowEntityCommand {
-    /// show all,
-    All(ShowAll),
-
-    /// the logs of a component.
-    Component(ShowComponent),
-}
-
-#[derive(Debug, Args)]
-#[clap(group = ArgGroup::new("sort").multiple(false))]
-pub struct ShowAll {
-    /// show the components of a machine.
-    #[clap(short,long)]
+    /// the name of the machine to be shown.
+    #[clap(short, long, group = "element")]
     pub machine: Option<String>,
 
-}
+    /// the name of the component to be shown.
+    #[clap(short, long, group = "element")]
+    pub component: Option<String>,
 
-#[derive(Debug, Args)]
-#[clap(group = ArgGroup::new("sort").multiple(false))]
-pub struct ShowComponent {
-    /// the name of the component whose logs will be shown.
-    pub name: String,
+    /// show the unfixed logs.
+    #[clap(short, long)]
+    pub logs: bool,
+
+    /// show all the logs.
+    #[clap(short, long)]
+    pub all: bool,
+
+    /// show the description.
+    #[clap(short, long)]
+    pub desc: bool,
+
+    /// sort the logs by the oldest.
+    #[clap(short = 'o', long, group = "sort")]
+    pub sort_oldest: bool,
+
+    /// sort the logs by the newest.
+    #[clap(short = 'n', long, group = "sort")]
+    pub sort_newest: bool,
 
 }
 
@@ -117,9 +115,8 @@ pub struct AddMachine {
     pub name: String,
 
     /// the description of the machine that will be added.
-    #[clap(short,long)]
+    #[clap(short, long)]
     pub description: Option<String>,
-
 }
 
 #[derive(Debug, Args)]
@@ -131,11 +128,11 @@ pub struct AddComponent {
     pub machine: String,
 
     /// the description of the component that will be added.
-    #[clap(short,long)]
+    #[clap(short, long)]
     pub description: Option<String>,
 
     /// the priority of the component that will be added.
-    #[clap(short,long)]
+    #[clap(short, long)]
     pub priority: Option<i32>,
 }
 
@@ -201,11 +198,11 @@ pub struct EditMachine {
     pub name: String,
 
     /// the new name of the machine.
-    #[clap(short,long)]
+    #[clap(short, long)]
     pub new_name: Option<String>,
 
     /// the new description of the machine.
-    #[clap(short,long)]
+    #[clap(short, long)]
     pub new_description: Option<String>,
 }
 
@@ -215,15 +212,15 @@ pub struct EditComponent {
     pub name: String,
 
     /// the new name of the component.
-    #[clap(short='n',long)]
+    #[clap(short = 'n', long)]
     pub new_name: Option<String>,
 
     /// the new description of the component.
-    #[clap(short='d',long)]
+    #[clap(short = 'd', long)]
     pub new_description: Option<String>,
 
     /// the new priority of the component.
-    #[clap(short='p',long)]
+    #[clap(short = 'p', long)]
     pub new_priority: Option<i32>,
 }
 
@@ -233,15 +230,15 @@ pub struct EditLog {
     pub id: i32,
 
     /// the new description of the log.
-    #[clap(short='d',long)]
+    #[clap(short = 'd', long)]
     pub new_description: Option<String>,
 
     /// the new status of the log.
-    #[clap(short='s',long)]
+    #[clap(short = 's', long)]
     pub new_status: Option<i32>,
 
     /// the new name of the log.
-    #[clap(short,long)]
+    #[clap(short, long)]
     pub new_name: Option<String>,
 }
 
@@ -252,15 +249,15 @@ pub struct ReportGlich {
     pub component: String,
 
     /// the description of the glich.
-    #[clap(short,long)]
+    #[clap(short, long)]
     pub description: Option<String>,
 
     // TODO: turn this into a value enum
     /// the status of the component: 1 for optimal, 2 for improvable, 3 for unadjusted, 4 for suboptimal, 5 for defective.
-    #[clap(short,long)]
+    #[clap(short, long)]
     pub status: Option<i32>,
 
     /// the name of the log that describes the glich.
-    #[clap(short,long)]
+    #[clap(short, long)]
     pub name: Option<String>,
 }
