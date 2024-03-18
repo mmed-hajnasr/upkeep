@@ -12,16 +12,16 @@ pub struct UpkeepArgs {
 #[derive(Debug, Subcommand)]
 pub enum Action {
     /// Mark a component or a log as fixed.
-    // Fix(FixEntity),
+    Fix(FixEntity),
 
     /// add a machine or a component.
     Add(AddEntity),
 
     /// remove a machine or a component or a log.
-    // Remove(RemoveEntity),
+    Remove(RemoveEntity),
 
     /// edit the attributes of a machine or a component or a log.
-    // Edit(EditEntity),
+    Edit(EditEntity),
 
     /// show all machines or components or logs.
     Show(ShowEntity),

@@ -3,7 +3,6 @@ CREATE TABLE IF NOT EXISTS Machine (
     name TEXT NOT NULL UNIQUE,
     description TEXT
 );
-
 CREATE TABLE IF NOT EXISTS Component (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
@@ -13,7 +12,6 @@ CREATE TABLE IF NOT EXISTS Component (
     machineid INTEGER NOT NULL,
     FOREIGN KEY (machineid) REFERENCES Machine(id) ON DELETE CASCADE
 );
-
 CREATE TABLE IF NOT EXISTS Log (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
@@ -25,47 +23,53 @@ CREATE TABLE IF NOT EXISTS Log (
     componentid INTEGER NOT NULL,
     FOREIGN KEY (componentid) REFERENCES Component(id) ON DELETE CASCADE
 );
-
 CREATE TRIGGER IF NOT EXISTS updateComponentStatusOnLogUpdate
 AFTER
 UPDATE ON Log BEGIN
 UPDATE Component
-SET status = (
-        SELECT max(status)
-        FROM Log
-        WHERE componentid = NEW.componentid
+SET status = COALESCE(
+        (
+            SELECT max(status)
+            FROM Log
+            WHERE componentid = NEW.componentid
+                AND fixed = 0
+        ),1
     )
 WHERE id = NEW.componentid;
 END;
-
 CREATE TRIGGER IF NOT EXISTS updateComponentStatusOnLogInsert
 AFTER
 INSERT ON Log BEGIN
 UPDATE Component
-SET status = (
-        SELECT max(status)
-        FROM Log
-        WHERE componentid = NEW.componentid
+SET status = COALESCE(
+        (
+            SELECT max(status)
+            FROM Log
+            WHERE componentid = NEW.componentid
+                AND fixed = 0
+        ),
+        1
     )
 WHERE id = NEW.componentid;
 END;
-
 CREATE TRIGGER IF NOT EXISTS updateComponentStatusOnLogDelete
-AFTER
-DELETE ON Log BEGIN
+AFTER DELETE ON Log BEGIN
 UPDATE Component
-SET status = (
-        SELECT max(status)
-        FROM Log
-        WHERE componentid = OLD.componentid
+SET status = COALESCE(
+        (
+            SELECT max(status)
+            FROM Log
+            WHERE componentid = OLD.componentid
+                AND fixed = 0
+        ),1
     )
 WHERE id = OLD.componentid;
 END;
-
 CREATE TRIGGER IF NOT EXISTS updateLogNameIfNull
 AFTER
 INSERT ON Log BEGIN
 UPDATE Log
 SET name = "Error " || NEW.id
-WHERE id = NEW.id AND name IS NULL;
+WHERE id = NEW.id
+    AND name IS NULL;
 END;

@@ -130,10 +130,10 @@ impl DatabaseOperations {
                     "%Y-%m-%d %H:%M:%S",
                 )
                 .unwrap(),
-                fixed: row.get(5)?,
-                fixed_date: row.get::<_, Option<String>>(5)?.map(|date: String| {
+                fixed_date: row.get::<_, Option<String>>(4)?.map(|date: String| {
                     NaiveDateTime::parse_from_str(date.as_str(), "%Y-%m-%d %H:%M:%S").unwrap()
                 }),
+                fixed: row.get(5)?,
             })
         }) {
             Ok(log) => Some(log),

@@ -3,6 +3,9 @@ mod add_ops;
 mod show_ops;
 mod report_ops;
 mod output_ops;
+mod fix_ops;
+mod edit_ops;
+mod remove_ops;
 
 pub struct DatabaseOperations {
     conn: Connection,
