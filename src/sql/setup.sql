@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS Component (
     description TEXT,
     priority INTEGER NOT NULL DEFAULT 3,
     status INTEGER NOT NULL DEFAULT 1,
+    errordate datetime,
     machineid INTEGER NOT NULL,
     FOREIGN KEY (machineid) REFERENCES Machine(id) ON DELETE CASCADE
 );
@@ -33,7 +34,8 @@ SET status = COALESCE(
             FROM Log
             WHERE componentid = NEW.componentid
                 AND fixed = 0
-        ),1
+        ),
+        1
     )
 WHERE id = NEW.componentid;
 END;
@@ -61,7 +63,8 @@ SET status = COALESCE(
             FROM Log
             WHERE componentid = OLD.componentid
                 AND fixed = 0
-        ),1
+        ),
+        1
     )
 WHERE id = OLD.componentid;
 END;
@@ -72,4 +75,19 @@ UPDATE Log
 SET name = "Error " || NEW.id
 WHERE id = NEW.id
     AND name IS NULL;
+END;
+CREATE TRIGGER IF NOT EXISTS updateComponentErrorDateOnLogUpdate
+AFTER
+UPDATE OF status ON Component BEGIN
+UPDATE Component
+SET errordate = (
+        SELECT startDate
+        FROM Log
+        WHERE componentid = NEW.id
+            AND status = NEW.status
+            AND fixed = 0
+        ORDER BY startDate ASC
+        LIMIT 1
+    )
+WHERE id = NEW.id;
 END;
