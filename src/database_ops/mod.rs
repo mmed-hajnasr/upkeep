@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use rusqlite::Connection;
 mod add_ops;
 mod show_ops;
@@ -12,7 +14,7 @@ pub struct DatabaseOperations {
 }
 
 impl DatabaseOperations {
-    pub fn new(database_path: &str) -> DatabaseOperations {
+    pub fn new(database_path: PathBuf) -> DatabaseOperations {
         let conn = Connection::open(database_path).unwrap();
         conn.execute_batch(include_str!("../sql/setup.sql"))
             .expect("Error setting up the database");

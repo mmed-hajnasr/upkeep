@@ -5,7 +5,7 @@ mod test_database_opearations {
     use upkeep::{Component, Machine};
     #[test]
     fn test_add_edit_remove() {
-        let database_connection = DatabaseOperations::new(":memory:");
+        let database_connection = DatabaseOperations::new(":memory:".into());
 
         assert!(database_connection.get_machine("machine1").is_none());
 
@@ -159,7 +159,7 @@ mod test_database_opearations {
 
     #[test]
     fn test_report_fix() {
-        let database_connection = DatabaseOperations::new(":memory:");
+        let database_connection = DatabaseOperations::new(":memory:".into());
         let machine1 = args::AddMachine {
             name: "machine1".to_string(),
             description: Some("machine1 description".to_string()),

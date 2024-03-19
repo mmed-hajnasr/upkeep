@@ -1,14 +1,13 @@
+use dirs;
 mod args;
 mod database_ops;
 mod tests;
-use std::path::Path;
 
 use clap::Parser;
 
 fn main() {
-    let dir = Path::new("target");
-    let path = dir.join("test.db");
-    let database_connection = database_ops::DatabaseOperations::new(path.to_str().unwrap());
+    let data_dir = dirs::data_dir().unwrap().join("upkeep");
+    let database_connection = database_ops::DatabaseOperations::new(data_dir);
 
     let command = args::UpkeepArgs::parse();
     match command.action {
