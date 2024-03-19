@@ -1,5 +1,4 @@
 use dirs;
-mod tests;
 
 use clap::Parser;
 use upkeep::args;

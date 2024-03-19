@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod test_database_opearations {
-    use crate::args;
-    use crate::database_ops::DatabaseOperations;
+    use upkeep::args;
+    use upkeep::database_ops::DatabaseOperations;
     use upkeep::{Component, Machine};
     #[test]
     fn test_add_edit_remove() {
