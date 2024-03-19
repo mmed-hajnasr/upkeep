@@ -1,5 +1,6 @@
 [package]
 name = "upkeep"
+description = "A command-line tool for logging and tracking machine and component statuses for later maintenance."
 version = "1.0.0"
 edition = "2021"
 authors = ["mmed"]
