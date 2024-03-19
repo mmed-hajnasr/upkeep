@@ -44,3 +44,8 @@ It provides various subcommands for managing your logs:
 - clap: Used for parsing command-line arguments.
 - colored: Used for adding color formatting to the output for better readability.
 - rusqlite: Used for interacting with a SQLite database to store the log information persistently.
+
+## future improvements
+
+- [ ] Add a feature to export the logs to a markdown file.
+- [ ] Add a better dashboard to view the components.
