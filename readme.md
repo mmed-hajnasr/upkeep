@@ -10,6 +10,22 @@ Description: A command-line tool for logging and tracking machine and component 
 - Users can then manage these logs, marking them as fixed or removing them once addressed.
 - This helps maintain a record of potential maintenance needs for later attention.
 
+## installation
+
+### using cargo
+
+```bash
+cargo install upkeep
+```
+
+### from source
+
+```bash
+git clone https://github.com/mmed-hajnasr/upkeep.git
+cd upkeep
+cargo install --path .
+```
+
 ## Usage
 
 upkeep is a command-line tool.
