@@ -1,7 +1,7 @@
 use super::DatabaseOperations;
 use chrono::NaiveDateTime;
 use rusqlite::{params, Error};
-use upkeep::{Component, Log, Machine};
+use crate::{Component, Log, Machine};
 
 impl DatabaseOperations {
     pub fn get_machines(&self) -> Vec<Machine> {

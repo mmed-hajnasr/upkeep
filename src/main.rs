@@ -1,9 +1,9 @@
 use dirs;
-mod args;
-mod database_ops;
 mod tests;
 
 use clap::Parser;
+use upkeep::args;
+use upkeep::database_ops;
 
 fn main() {
     let data_dir = dirs::data_dir().unwrap().join("upkeep");

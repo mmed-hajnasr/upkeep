@@ -1,7 +1,7 @@
 use super::DatabaseOperations;
 use crate::args::ShowEntity;
 use colored::ColoredString;
-use upkeep::status_vec;
+use crate::status_vec;
 
 // TODO: implement the show operations
 impl DatabaseOperations {
