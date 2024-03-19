@@ -12,5 +12,6 @@ license = "MIT"
 [dependencies]
 chrono = "0.4.35"
 clap = { version = "4.0", features = ["derive"] }
+colored = "2.1.0"
 rusqlite = { version = "0.31.0", features = ["bundled"] }
 tempfile = "3.10.1"

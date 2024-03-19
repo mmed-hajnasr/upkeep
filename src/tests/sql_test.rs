@@ -66,6 +66,7 @@ mod test_database_opearations {
                 description: None,
                 status: 1,
                 priority: 1,
+                error_date: None,
             })
         );
 
@@ -77,6 +78,7 @@ mod test_database_opearations {
                 description: Some("component2 description".to_string()),
                 status: 1,
                 priority: 3,
+                error_date: None,
             })
         );
 
@@ -103,7 +105,8 @@ mod test_database_opearations {
 
         let machine1: Option<Machine> = database_connection.get_machine("machine_edited");
         let machine2: Option<Machine> = database_connection.get_machine("machine2");
-        let components: Option<Vec<Component>> = database_connection.get_components("machine_edited");
+        let components: Option<Vec<Component>> =
+            database_connection.get_components("machine_edited");
 
         assert_eq!(
             machine1,
@@ -131,6 +134,7 @@ mod test_database_opearations {
                 description: Some("new description".to_string()),
                 status: 1,
                 priority: 3,
+                error_date: None,
             }])
         );
 
@@ -151,7 +155,6 @@ mod test_database_opearations {
         assert!(component2.is_none());
         assert!(component1.is_none());
         assert!(machine.is_none());
-
     }
 
     #[test]
@@ -240,7 +243,9 @@ mod test_database_opearations {
         assert_eq!(logs.len(), 2);
 
         for log in logs {
-            database_connection.handle_remove(args::RemoveEntityCommand::Log(args::RemoveLog { id: log.id }));
+            database_connection.handle_remove(args::RemoveEntityCommand::Log(args::RemoveLog {
+                id: log.id,
+            }));
         }
 
         let logs = database_connection.get_logs("component1").unwrap();

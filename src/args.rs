@@ -1,4 +1,4 @@
-use clap::{ArgGroup, Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand};
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about)]
@@ -60,7 +60,7 @@ pub struct FixLog {
 }
 
 //* the show commands
-#[derive(Debug, Args)]
+#[derive(Debug, Args, Clone)]
 pub struct ShowEntity {
 
     /// the name of the machine to be shown.
@@ -92,7 +92,6 @@ pub struct ShowEntity {
     pub sort_newest: bool,
 
 }
-
 //* the add commands
 #[derive(Debug, Args)]
 pub struct AddEntity {
@@ -202,7 +201,7 @@ pub struct EditMachine {
     pub new_name: Option<String>,
 
     /// the new description of the machine.
-    #[clap(short, long)]
+    #[clap(short='d', long)]
     pub new_description: Option<String>,
 }
 

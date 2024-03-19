@@ -4,6 +4,25 @@ use rusqlite::{params, Error};
 use upkeep::{Component, Log, Machine};
 
 impl DatabaseOperations {
+    pub fn get_machines(&self) -> Vec<Machine> {
+        const GET_MACHINES_QUERY: &str = "SELECT id,name,description FROM Machine";
+        let mut stmt = self.conn.prepare(GET_MACHINES_QUERY).unwrap();
+        let machine_iter = stmt
+            .query_map(params![], |row| {
+                Ok(Machine {
+                    id: row.get(0)?,
+                    name: row.get(1)?,
+                    description: row.get(2)?,
+                })
+            })
+            .unwrap();
+        let mut machines: Vec<Machine> = Vec::new();
+        for machine in machine_iter {
+            machines.push(machine.unwrap());
+        }
+        machines
+    }
+
     pub fn get_machine(&self, name: &str) -> Option<Machine> {
         const GET_MACHINE_QUERY: &str = "SELECT id,description FROM Machine WHERE name = ?1";
         match self
@@ -34,7 +53,7 @@ impl DatabaseOperations {
         };
 
         // get the list of components
-        const GET_COMPONENTS_QUERY: &str = "SELECT id,name,description,status,priority FROM Component WHERE machineid = ?1 ORDER BY priority";
+        const GET_COMPONENTS_QUERY: &str = "SELECT id,name,description,status,priority,errordate FROM Component WHERE machineid = ?1 ORDER BY priority";
         let mut stmt = self.conn.prepare(GET_COMPONENTS_QUERY).unwrap();
         let component_iter = stmt
             .query_map(params![machine.id], |row| {
@@ -44,6 +63,9 @@ impl DatabaseOperations {
                     description: row.get(2)?,
                     status: row.get(3)?,
                     priority: row.get(4)?,
+                    error_date: row.get::<_, Option<String>>(5)?.map(|date: String| {
+                        NaiveDateTime::parse_from_str(date.as_str(), "%Y-%m-%d %H:%M:%S").unwrap()
+                    }),
                 })
             })
             .unwrap();
@@ -56,7 +78,7 @@ impl DatabaseOperations {
 
     pub fn get_component(&self, component_name: &str) -> Option<Component> {
         const GET_COMPONENT_QUERY: &str =
-            "SELECT id,description,status,priority FROM Component WHERE name = ?1";
+            "SELECT id,description,status,priority,errordate FROM Component WHERE name = ?1";
         match self
             .conn
             .query_row(GET_COMPONENT_QUERY, params![component_name], |row| {
@@ -66,6 +88,9 @@ impl DatabaseOperations {
                     description: row.get(1)?,
                     status: row.get(2)?,
                     priority: row.get(3)?,
+                    error_date: row.get::<_, Option<String>>(4)?.map(|date: String| {
+                        NaiveDateTime::parse_from_str(date.as_str(), "%Y-%m-%d %H:%M:%S").unwrap()
+                    }),
                 })
             }) {
             Ok(component) => Some(component),
